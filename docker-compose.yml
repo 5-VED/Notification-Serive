@@ -1,0 +1,20 @@
+# docker-compose.notification.yml
+
+services:
+  notification-svc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: notification-svc
+    restart: always
+    env_file: /.env 
+    ports:
+      - "3001:3001"
+    environment:
+      KAFKA_BROKER: kafka:29092
+    networks:
+      - kafka-net
+
+networks:
+  kafka-net:
+    external: true
