@@ -23,10 +23,8 @@ class RabbitMQConsumer extends RabbitMQConnectin {
             }
             console.log('consumeFromQueue  1 -------------->');
 
-            // Assert queue exists
-            await channel.assertQueue(queueName, {
-                durable: true,
-            });
+            // Ensure queue exists without redefining its arguments (avoids PRECONDITION_FAILED)
+            await channel.checkQueue(queueName);
             console.log('consumeFromQueue  2 -------------->');
             
             // Set prefetch count to process one message at a time
@@ -36,9 +34,11 @@ class RabbitMQConsumer extends RabbitMQConnectin {
             
             // Start consuming
             await channel.consume(queueName, async (msg: any) => {
+                console.log('msg -------------->', msg);
                 if (msg) {
                     try {
                         const messageContent = JSON.parse(msg.content.toString());
+                        console.log('messageContent -------------->', messageContent);
                         logger.info(`${message.RABBITMQ_MSG_RECEIVED_QUEUE} ${queueName}`);
 
                         // Process the message

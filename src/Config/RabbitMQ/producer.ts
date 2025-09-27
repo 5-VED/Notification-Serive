@@ -126,13 +126,13 @@ class RabbitMQProducer extends RabbitMQConnectin {
     ): Promise<boolean> {
         try {
             await this.ensureConnection();
-
-            if (!this.channel) {
+            const channel = await this.connect();
+            if (!channel) {
                 throw new Error("RabbitMQ channel not available");
             }
 
             // Assert exchange exists
-            await this.channel.assertExchange(exchangeName, 'topic', {
+            await channel.assertExchange(exchangeName, 'topic', {
                 durable: true,
             });
 
@@ -140,7 +140,7 @@ class RabbitMQProducer extends RabbitMQConnectin {
             const messageBuffer = Buffer.from(JSON.stringify(message));
 
             // Publish message
-            const published = this.channel.publish(exchangeName, routingKey, messageBuffer, {
+            const published = channel.publish(exchangeName, routingKey, messageBuffer, {
                 persistent: true,
                 ...options,
             });

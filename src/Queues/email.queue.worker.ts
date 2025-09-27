@@ -22,8 +22,7 @@ interface EmailQueueMessage {
 export async function startEmailQueueWorker(): Promise<void> {
   await rabbitMQProducer.setupNotificationBindings();
 
-  console.log('log 6 =====================');
-  await rabbitMQConsumer.consumeFromQueue(
+  await rabbitMQConsumer.consumeFromQueue(  
     "emailNotifications",
     async (message: EmailQueueMessage) => {
       try {

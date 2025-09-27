@@ -340,7 +340,7 @@ export class TemplateService {
 
     // Replace variables in subject and html
     Object.keys(variables).forEach(key => {
-      const placeholder = `{{${key}}}`;
+      const placeholder = `${key}`;
       const value = variables[key] || '';
       
       subject = subject.replace(new RegExp(placeholder, 'g'), value);

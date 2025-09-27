@@ -39,9 +39,9 @@ export enum ORDER_STATUS {
 
 
 export enum NOTIFICATION_CHANNEL {
-	EMAIL = 'email',
-	IN_APP = 'mobile',
-	PUSH_NOTIFICATION = 'push_notification',
+	EMAIL = 'emailNotifications',
+	IN_APP = 'inAppNotifications',
+	PUSH_NOTIFICATION = 'pushNotifications',
 }
 
 export enum QUEUES {

@@ -9,11 +9,8 @@ export class Orchestrator {
       case "otp_email":
         await this.handleOtpEmail(payload)
         break
-      case "login_notification":
-        await this.sendByTemplate("login_notification", payload)
-        break
       case "welcome_email":
-        await this.sendByTemplate("welcome_email", payload)
+        await this.handleOtpEmail(payload)
         break
       default:
         break
@@ -25,12 +22,6 @@ export class Orchestrator {
     const subject = 'Your OTP Code'
     const html = await TemplateService.renderEmail("send_otp", { otp }) 
     await EmailAdapter.send(email, subject, html.html)
-  }
-
-  private static async sendByTemplate(templateName: string, variables: Record<string, string>) {
-    const { subject, html } = await TemplateService.renderEmail(templateName, variables as any)
-    const to = variables.email
-    await EmailAdapter.send(to, subject, html)
   }
 }
 
