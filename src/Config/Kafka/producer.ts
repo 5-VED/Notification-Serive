@@ -3,7 +3,7 @@ import logger from "../Logger";
 const { Kafka } = require('kafkajs');
 
 const kafka = new Kafka({
-  clientId: 'my-app',
+  clientId: 'bridge',
   brokers: ['localhost:9092'],
 });
 

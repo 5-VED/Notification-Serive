@@ -94,7 +94,6 @@ const message = {
 	RABBITMQ_ERROR_PROCESSING_EXCHANGE: 'Error processing message from exchange',
 	RABBITMQ_STARTED_CONSUMING_EXCHANGE: 'Started consuming from exchange:',
 	RABBITMQ_ERROR_CONSUMING_EXCHANGE: 'Error consuming from exchange',
-
 };
 
 export default message;

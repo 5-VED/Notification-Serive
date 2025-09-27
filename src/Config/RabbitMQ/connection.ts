@@ -8,14 +8,16 @@ class RabbitMQConnectin {
     public channel: any = null;
     public isConnected: boolean = false;
 
-    async connect(): Promise<void> {
+    async connect(): Promise<any> {
         try {
             if (!config.rabbitmq.url) {
                 throw new Error(message.RABBITMQ_URL_NOT_CONFIGURED);
             }
 
             this.connection = await amqp.connect(config.rabbitmq.url);
+            
             this.channel = await this.connection.createChannel();
+
             this.isConnected = true;
 
             // Handle connection close
@@ -29,8 +31,8 @@ class RabbitMQConnectin {
                 logger.error(message.RABBITMQ_CONNECTION_ERROR, error);
                 this.isConnected = false;
             });
-
             logger.info(message.RABBITMQ_CONNECTED_PRODUCER);
+            return this.channel;
         } catch (error) {
             logger.error(message.RABBITMQ_CONNECTION_FAILED, error);
             throw error;
@@ -46,7 +48,6 @@ class RabbitMQConnectin {
     getConnectionStatus(): boolean {
         return this.isConnected;
     }
-
 
     async close(): Promise<void> {
         try {

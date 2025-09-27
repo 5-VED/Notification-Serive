@@ -1,5 +1,5 @@
 import { EmailAdapter } from "../Channels/email.adapter"
-import { TemplateService } from "../Templates/template.service"
+import { TemplateService } from "../Templates/templates"
 
 type EmailEventType = "otp_email" | "login_notification" | "welcome_email"
 

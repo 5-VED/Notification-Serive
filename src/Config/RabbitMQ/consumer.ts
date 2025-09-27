@@ -15,22 +15,27 @@ class RabbitMQConsumer extends RabbitMQConnectin {
         options: any = {}
     ): Promise<void> {
         try {
-            await this.ensureConnection();
+            // await this.ensureConnection();
+            const channel = await this.connect();
 
-            if (!this.channel) {
+            if (!channel) {
                 throw new Error(message.RABBITMQ_CHANNEL_NOT_AVAILABLE);
             }
+            console.log('consumeFromQueue  1 -------------->');
 
             // Assert queue exists
-            await this.channel.assertQueue(queueName, {
+            await channel.assertQueue(queueName, {
                 durable: true,
             });
-
+            console.log('consumeFromQueue  2 -------------->');
+            
             // Set prefetch count to process one message at a time
-            await this.channel.prefetch(1);
-
+            await channel.prefetch(1);
+            
+            console.log('consumeFromQueue  3 -------------->');
+            
             // Start consuming
-            await this.channel.consume(queueName, async (msg: any) => {
+            await channel.consume(queueName, async (msg: any) => {
                 if (msg) {
                     try {
                         const messageContent = JSON.parse(msg.content.toString());

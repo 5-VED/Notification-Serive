@@ -2,10 +2,74 @@ import logger from '../Logger';
 import RabbitMQConnectin from './connection';
 
 class RabbitMQProducer extends RabbitMQConnectin {
+
+    constructor() {
+        super();
+    }
+
+    /**
+     * Ensure exchanges, queues, and DLQ bindings exist
+     */
+    async setupNotificationBindings(): Promise<void> {
+        try {
+
+            console.log('setupNotificationBindings -------------->');
+            // await this.ensureConnection();
+
+            const channel = await this.connect();
+            console.log('channel 1 -------------->');
+
+            if (!channel) {
+                throw new Error("RabbitMQ channel not available");
+            }            
+
+            const mainExchange = 'notifications';
+            const dlqExchange = 'notifications.dlq';
+
+            const emailQueue = 'emailNotifications';
+
+            const emailDlq = 'emailNotifications.dlq';
+
+            // Exchanges
+            await Promise.all(
+                [
+                    channel.assertExchange(mainExchange, 'topic', { durable: true }),
+                    channel.assertExchange(dlqExchange, 'topic', { durable: true })
+                ]
+            )
+            
+            // Queues
+            await Promise.all(
+                [
+                    channel.assertQueue(emailDlq, { durable: true }),
+                    channel.assertQueue(emailQueue, {
+                        durable: true,
+                        arguments: {
+                            'x-dead-letter-exchange': dlqExchange,
+                            'x-dead-letter-routing-key': 'dlq.email',
+                        }
+                    })
+                ]
+            )
+
+            await Promise.all(
+                [
+                    channel.bindQueue(emailQueue, mainExchange, 'notifications.email.*'),
+                    channel.bindQueue(emailDlq, dlqExchange, 'dlq.email')
+                ]
+            )
+
+            logger.info('RabbitMQ topology asserted: exchanges, queues, and DLQs');
+        } catch (error) {
+            logger.error('RabbitMQ error setting up topology:', error);
+            throw error;
+        }
+    }
+
     /**
      * Publish message to a queue
      * @param queueName - Name of the queue
-     * @param message - Message to publish
+     * @param message - @Message to publish
      * @param options - Publishing options
      */
     async publishToQueue(
@@ -22,7 +86,7 @@ class RabbitMQProducer extends RabbitMQConnectin {
 
             // Assert queue exists
             await this.channel.assertQueue(queueName, {
-                durable: true, // Queue survives broker restarts
+                durable: true,
             });
 
             // Convert message to buffer
@@ -30,7 +94,7 @@ class RabbitMQProducer extends RabbitMQConnectin {
 
             // Publish message
             const published = this.channel.sendToQueue(queueName, messageBuffer, {
-                persistent: true, // Message survives broker restarts
+                persistent: true,
                 ...options,
             });
 
@@ -102,7 +166,7 @@ class RabbitMQProducer extends RabbitMQConnectin {
     async publishNotification(
         notificationData: {
             userId: string;
-            type: 'email' | 'sms' | 'push' | 'webpush';
+            type: 'email';
             subject?: string;
             content: string;
             metadata?: any;
