@@ -45,10 +45,6 @@ class RabbitMQConnectin {
         }
     }
 
-    getConnectionStatus(): boolean {
-        return this.isConnected;
-    }
-
     async close(): Promise<void> {
         try {
             if (this.channel) {

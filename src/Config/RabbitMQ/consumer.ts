@@ -96,7 +96,7 @@ class RabbitMQConsumer extends RabbitMQConnectin {
             });
             const queueName = queueResult.queue;
 
-            // Bind queue to exchange with routing key
+            //Bind queue to exchange with routing key
             await this.channel.bindQueue(queueName, exchangeName, routingKey);
 
             // Set prefetch count

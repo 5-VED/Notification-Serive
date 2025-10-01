@@ -31,4 +31,4 @@ export interface IConfig {
     rabbitmq: {
         url: string;
     };
-    }
+}

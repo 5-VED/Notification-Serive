@@ -11,8 +11,8 @@ interface FanoutPayload {
 }
 
 export async function startFanoutWorker(): Promise<void> {
-  console.log('startFanoutWorker -------------->');
   const brokers = String(config.kafka.brokers).split(',').map((b) => b.trim()).filter(Boolean);
+  
   const clientId = process.env.KAFKA_CLIENT_ID || 'notification-service';
   const groupId = process.env.KAFKA_FANOUT_GROUP_ID || 'notification-fanout-group';
   const topic = process.env.KAFKA_TOPIC_FANOUT || 'notifications.email.welcome_email';
@@ -26,11 +26,10 @@ export async function startFanoutWorker(): Promise<void> {
   await rabbitMQProducer.setupNotificationBindings();
   await consumer.run({
     eachMessage: async ({ message }) => {
-      console.log('eachMessage -------------->', message);
+      
       if (!message?.value) return;
 
       const raw: any = JSON.parse(message.value.toString());
-      console.log('payload -------------->', raw);
 
       // If Auth-Service sent [email, otp], map it to the email worker shape
       if (Array.isArray(raw)) {
@@ -39,7 +38,6 @@ export async function startFanoutWorker(): Promise<void> {
           payload: raw,
         };
         await rabbitMQProducer.publishToExchange('notifications', 'notifications.email.' + "welcome_email", mapped);
-        console.log('mapped -------------->', mapped);
         return;
       }
 
