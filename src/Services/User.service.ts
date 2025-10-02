@@ -33,7 +33,7 @@ export default class UserService {
             const user = await UserRepository.create(
                 {
                     ...payload,
-                    password: hashedPassword,
+                    password: hashedPassword,   
                 },
                 transaction,
             );

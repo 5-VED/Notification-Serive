@@ -30,15 +30,18 @@ export async function startEmailQueueWorker(): Promise<void> {
           await Orchestrator.handleEmailEvent(message.eventType, message.payload);
           return;
         }
+
         if (message.template && message.to) {
           const { subject, html } = await TemplateService.renderEmail(message.template, message.variables || {});
           await EmailAdapter.send(message.to, subject, html);
           return;
         }
+        
         if (message.to && message.subject && message.html) {
           await EmailAdapter.send(message.to, message.subject, message.html);
           return;
         }
+        
         logger.warn("Email message missing required fields; skipping.");
       } catch (error) {
         logger.error("Email worker failed to process message:", error);

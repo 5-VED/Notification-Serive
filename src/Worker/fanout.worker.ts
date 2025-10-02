@@ -4,8 +4,8 @@ import { config } from '../Config/config';
 import rabbitMQProducer from '../Config/RabbitMQ/producer';
 
 interface FanoutPayload {
-  eventType: string; // e.g., 'user.created'
-  channels?: Array<'email'>; // if omitted, default to all
+  eventType: string;
+  channels?: Array<'email'>;
   email?: { to?: string; template?: string; variables?: Record<string, any>; subject?: string; html?: string };
   traceId?: string;
 }
