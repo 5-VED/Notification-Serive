@@ -18,8 +18,11 @@ import { HTTP_CODES } from './Common/Constants/enums';
 import message from './Common/Constants/Messages';
 import ApiError from './Common/ErrorResponse';
 import redisClient from './Database/RedisConnection';
+import RabbitMQConnectin from './Config/RabbitMQ/connection';
+
 
 const FILE_PATH = '';
+
 
 export default class App {
     public app: express.Application;
@@ -36,9 +39,20 @@ export default class App {
 
     public async initialize(): Promise<void> {
         await this.connect();
-        await redisClient
+        // await redisClient
+        this.initializeRabbitMQ()
         this.initializeRoutes(new IndexRoute(this.app));
         this.initializeErrorHandling();
+    }
+
+    public async initializeRabbitMQ(): Promise<any> {
+        try {
+            const rabbitMQConnection = new RabbitMQConnectin();
+            await rabbitMQConnection.connect();
+        } catch (error: unknown) {
+            logger.error("❌ RabbitMQ connection failed:", error);            
+            process.exit(1);
+        }
     }
 
     public async connect(): Promise<void> {

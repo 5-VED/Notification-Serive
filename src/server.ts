@@ -16,9 +16,14 @@ process.on('uncaughtException', error => {
         const server = new App();
         await server.initialize();
         server.start();
-        // Start background workers
-        const { startEmailWorker } = await import('./Worker/email.worker');
-        startEmailWorker();
+
+        // Start Kafka fanout worker (Kafka -> RabbitMQ)
+        const { startFanoutWorker } = await import('./Worker/fanout.worker');
+        startFanoutWorker();
+
+        // Start RabbitMQ queue workers
+        const { startEmailQueueWorker } = await import('./Queues/email.queue.worker');
+        startEmailQueueWorker();
         
 
         for (const exitSignal of exitSignals) {

@@ -1,7 +1,6 @@
+import { IConfig } from '../Common/interfaces/IConfig';
 import dotenv from 'dotenv';
 import dotenvParseVariables from 'dotenv-parse-variables';
-import path from 'path';
-
 // Load environment variables from the .env file (optional in containers)
 const envResult = dotenv.config({ path: '.env' });
 
@@ -11,7 +10,7 @@ const parsedEnv = dotenvParseVariables(mergedEnv);
 
 const env = process.env.NODE_ENV || 'development';
 
-export const config	 = {
+export const config	= {
 	env,
 	isDevelopment: env === 'development',
 	isProduction: env === 'production',
@@ -40,5 +39,8 @@ export const config	 = {
 	},
 	kafka:{
 		brokers: parsedEnv.KAFKA_BROKERS || parsedEnv.KAFKA_BROKER || 'localhost:9092',
+	},
+	rabbitmq: {
+		url: parsedEnv.RABBITMQ_URL,
 	}
 };

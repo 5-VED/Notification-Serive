@@ -36,3 +36,15 @@ export enum ORDER_STATUS {
 	REJECTED = 'Rejected',
 	COMPLETED = 'Completed',
 }
+
+
+export enum NOTIFICATION_CHANNEL {
+	EMAIL = 'emailNotifications',
+	IN_APP = 'inAppNotifications',
+	PUSH_NOTIFICATION = 'pushNotifications',
+}
+
+export enum QUEUES {
+	EMAIL = "email_notifications",
+	EMAIL_DLQ = "email_notifications_dlq",
+}
