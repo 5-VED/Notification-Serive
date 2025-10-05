@@ -38,13 +38,15 @@ export enum ORDER_STATUS {
 }
 
 
-export enum NOTIFICATION_CHANNEL {
+export enum QUEUES {
 	EMAIL = 'emailNotifications',
 	IN_APP = 'inAppNotifications',
 	PUSH_NOTIFICATION = 'pushNotifications',
 }
 
-export enum QUEUES {
-	EMAIL = "email_notifications",
-	EMAIL_DLQ = "email_notifications_dlq",
+
+export enum SOCIAL_PROVIDER {
+	GOOGLE = 'google',
+	FACEBOOK = 'facebook',
+	APPLE = 'apple',
 }

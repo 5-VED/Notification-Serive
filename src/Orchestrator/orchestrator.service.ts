@@ -17,8 +17,8 @@ export class Orchestrator {
     }
   }
 
-  private static async handleOtpEmail(payload: string[]) {
-    const [email, otp] = payload
+  private static async handleOtpEmail(payload: { email: string, otp: string }) {
+    const {email , otp} = payload
     const subject = 'Your OTP Code'
     const html = await TemplateService.renderEmail("send_otp", { otp }) 
     await EmailAdapter.send(email, subject, html.html)

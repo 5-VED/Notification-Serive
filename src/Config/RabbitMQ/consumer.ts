@@ -29,7 +29,6 @@ class RabbitMQConsumer extends RabbitMQConnectin {
             await channel.prefetch(1);
             
 
-            
             // Start consuming
             await channel.consume(queueName, async (msg: any) => {  
                 if (msg) {
@@ -52,7 +51,7 @@ class RabbitMQConsumer extends RabbitMQConnectin {
             }, {
                 noAck: false, // Manual acknowledgment
                 ...options,
-            });
+            }); 
 
             logger.info(`${message.RABBITMQ_STARTED_CONSUMING_QUEUE} ${queueName}`);
         } catch (error) {

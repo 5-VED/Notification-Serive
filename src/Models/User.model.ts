@@ -12,6 +12,7 @@ export interface UserAttributes {
 	middleName?: string;
 	email: string;
 	phoneNo?: string;
+	password?: string;
 	role: string;
 	address: string;
 	images: string[];
