@@ -24,17 +24,16 @@ class RabbitMQConsumer extends RabbitMQConnectin {
 
             // Ensure queue exists without redefining its arguments (avoids PRECONDITION_FAILED)
             await channel.checkQueue(queueName);
-            
+
             // Set prefetch count to process one message at a time
             await channel.prefetch(1);
             
 
-            
             // Start consuming
-            await channel.consume(queueName, async (msg: any) => {
+            await channel.consume(queueName, async (msg: any) => {  
                 if (msg) {
                     try {
-                        const messageContent = JSON.parse(msg.content.toString());           
+                        const messageContent = JSON.parse(msg.content.toString());
                         logger.info(`${message.RABBITMQ_MSG_RECEIVED_QUEUE} ${queueName}`);
 
                         // Process the message
@@ -52,7 +51,7 @@ class RabbitMQConsumer extends RabbitMQConnectin {
             }, {
                 noAck: false, // Manual acknowledgment
                 ...options,
-            });
+            }); 
 
             logger.info(`${message.RABBITMQ_STARTED_CONSUMING_QUEUE} ${queueName}`);
         } catch (error) {

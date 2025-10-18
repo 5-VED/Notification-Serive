@@ -9,61 +9,41 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('notifications', {
       id: {
         type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
-        allowNull: false,
         primaryKey: true,
+        defaultValue: Sequelize.UUIDV4,
       },
-      name: {
+      eventType: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      phoneNo: {
+      queueName: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      password: {
+      channel: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      role: {
+      priority: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+      },
+      status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'pending',
+      },
+      sentAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn('NOW'),
+      },
+      userId: {
         type: Sequelize.UUID,
-        allowNull: false,
-      },
-      line1: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      line2: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      country: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      state: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      city: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      postalCode: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      images: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-        defaultValue: [],
         allowNull: false,
       },
       createdAt: {
@@ -81,8 +61,7 @@ module.exports = {
         defaultValue: false,
         allowNull: false,
       },
-    }); 
-
+    });
   },
 
   async down (queryInterface, Sequelize) {
@@ -92,6 +71,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('notifications');
   }
 };

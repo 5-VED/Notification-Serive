@@ -16,14 +16,4 @@ export default class UserController {
             next(error);
         }
     }
-
-    public static async login(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const response = await UserService.login(req.body.email, req.body.password);            
-            return sendResponse(res, response, message.USER_CREATED_SUCCESSFULLY, true, HTTP_CODES.OK);
-        } catch (error) {
-            logger.error('CONTROLLER LAYER:-->', error);
-            next(error);
-        }
-    }
 }

@@ -14,7 +14,7 @@ class RabbitMQProducer extends RabbitMQConnectin {
         try {
 
             console.log('setupNotificationBindings -------------->');
-            // await this.ensureConnection();
+            await this.ensureConnection();
 
             const channel = await this.connect();
             console.log('channel 1 -------------->');

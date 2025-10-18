@@ -1,49 +1,84 @@
-import { Table, Column, DataType, ForeignKey, BelongsTo, HasMany, AllowNull, PrimaryKey, HasOne } from 'sequelize-typescript';
+import { Table, Column, DataType, ForeignKey, BelongsTo, HasMany, AllowNull, PrimaryKey, HasOne, Unique, Default } from 'sequelize-typescript';
 import { BaseModel } from './BaseModel';
 import { Optional } from 'sequelize';
-import { RoleModel } from './index';
+import { RoleModel } from './Role.model';
+import { AddressModel } from './Address.model';
+import { AuthModel } from './Auth.model';
 
 export interface UserAttributes {
-	id: string;	
-	name: string;
+	id: string;
+	firstName: string;
+	lastName: string;
+	middleName?: string;
 	email: string;
-	phoneNo: string;
-	password: string;
+	phoneNo?: string;
+	password?: string;
 	role: string;
-	line1?: string;
-	line2?: string;
-	country: string;
-	state: string;
-	city: string;
-	images: string[] | [];
-	postalCode: string;
-	isActive?: boolean | true;
+	address: string;
+	images: string[];
+	isKYCVerified: boolean;
+	isActive: boolean;
+	isDeleted: boolean;
 	createdAt?: Date;
 	updatedAt?: Date;
-	isDeleted?: boolean | false;
 }
 
-export interface UserCreatinAttributes extends Optional<UserAttributes, 'id'> {}
+const	 indexes = [
+	{
+		unique: true,
+		fields: ['email']
+	},
+	{
+		unique: true,
+		fields: ['phoneNo']
+	},
+	{
+		fields: ['role'] // Index for foreign key
+	},
+	{
+		fields: ['address'] // Index for foreign key
+	}
+]
+
+export interface UserCreatinAttributes extends Optional<UserAttributes, 'id'> { }
 
 @Table({
 	tableName: 'users',
-	timestamps: true,   
+	timestamps: true,
+	indexes: indexes
 })
 export class UserModel extends BaseModel<UserCreatinAttributes> {
 	@PrimaryKey
+	@Default(DataType.UUIDV4)
 	@Column({
 		type: DataType.UUID,
-		defaultValue: DataType.UUIDV4,
 		primaryKey: true,
 	})
 	id!: string;
 
+	@AllowNull(false)
 	@Column({
 		type: DataType.STRING,
 		allowNull: false,
 	})
-	name!: string;
+	firstName!: string;
 
+	@AllowNull(false)
+	@Column({
+		type: DataType.STRING,
+		allowNull: false,
+	})
+	lastName!: string;
+
+	@AllowNull(true)
+	@Column({
+		type: DataType.STRING,
+		allowNull: true,
+	})
+	middleName!: string | "";
+
+	@AllowNull(false)
+	@Unique(true)
 	@Column({
 		type: DataType.STRING,
 		allowNull: false,
@@ -52,48 +87,28 @@ export class UserModel extends BaseModel<UserCreatinAttributes> {
 	email!: string;
 
 	@AllowNull(false)
+	@Unique(true)
 	@Column({
 		type: DataType.STRING,
 		allowNull: false,
 	})
 	phoneNo!: string;
 
+	@ForeignKey(() => AddressModel)
+	@AllowNull(false)
 	@Column({
 		type: DataType.STRING,
-		allowNull: false,
+		allowNull: false
 	})
-	password!: string;
+	address!: string
 
 	@ForeignKey(() => RoleModel)
+	@AllowNull(false)
 	@Column({
 		type: DataType.UUID,
 		allowNull: false,
 	})
 	role!: string;
-
-	@AllowNull(true)
-	@Column({ type: DataType.STRING })
-	line1?: string;
-
-	@AllowNull(true)
-	@Column({ type: DataType.STRING })
-	line2?: string;
-
-	@AllowNull(false)
-	@Column({ type: DataType.STRING })
-	country!: string;
-
-	@AllowNull(false)
-	@Column({ type: DataType.STRING })
-	state!: string;
-
-	@AllowNull(false)
-	@Column({ type: DataType.STRING })
-	city!: string;
-
-	@AllowNull(false)
-	@Column({ type: DataType.STRING })
-	postalCode!: string;
 
 	@AllowNull(false)
 	@Column({
@@ -102,7 +117,18 @@ export class UserModel extends BaseModel<UserCreatinAttributes> {
 	})
 	images!: string[];
 
+	@Default(false)
+	@Column({
+		type: DataType.BOOLEAN
+	})
+	isKYCVerified!: boolean | false
+
 	@BelongsTo(() => RoleModel, { foreignKey: 'role', targetKey: 'id' })
 	roleData!: RoleModel;
 
+	@BelongsTo(() => AddressModel, { foreignKey: 'address', targetKey: 'id' })
+	addressData!: AddressModel;
+
+	@HasMany(() => AuthModel, { foreignKey: 'userId', sourceKey: 'id' })
+	socialAuths!: AuthModel[];
 }
