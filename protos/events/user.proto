@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package events.user;
-
-message UserLoggedIn {
-  string user_id = 1;
-  string email = 2;
-  int64 login_time = 3;
-}

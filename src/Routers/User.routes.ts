@@ -7,8 +7,6 @@ import { LoginDto } from '../Validators/LoginDto';
 
 const router = Router({ mergeParams: true });
 
-
-
 router.post('/signup', ValidationMiddleware(UserDto, 'body'), UserController.signup);
 
 router.post('/login', ValidationMiddleware(LoginDto, 'body'), UserController.login);

@@ -9,13 +9,13 @@ const kafka = new Kafka({
 
 const producer = kafka.producer();
 
-const runProducer = async (topic:string,message:[]) => {
-    await producer.connect()
-    logger.info("Connected to kafka producer")
-    await producer.send({
-        topic,
-        messages: [{value: JSON.stringify(message)}],
-    })
+const runProducer = async (topic: string, message: []) => {
+  await producer.connect()
+  logger.info("Connected to kafka producer")
+  await producer.send({
+    topic,
+    messages: [{ value: JSON.stringify(message) }],
+  })
 }
 
 export default runProducer;
