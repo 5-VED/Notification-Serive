@@ -1,22 +1,32 @@
-import { Table, Column, DataType, ForeignKey, BelongsTo, HasMany, AllowNull, PrimaryKey, HasOne, Unique } from 'sequelize-typescript';
-import { BaseModel } from './BaseModel';
+import { Table, Column, DataType, PrimaryKey, Unique, Model, CreatedAt, UpdatedAt, HasMany } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
+import { UserModel } from './User.model';
+import { BaseModel } from './BaseModel';
 
 export interface RoleAttributes {
-	id: string;	
-	role: string;
-	isActive?: boolean | true;
-	createdAt?: Date;
-	updatedAt?: Date;
+    id: string;
+    role: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
-export interface RoleCreatinAttributes extends Optional<RoleAttributes, 'id'> {}
+export interface RoleCreatinAttributes extends Optional<RoleAttributes, 'id'> { }
+
+const indexes = [
+    {
+        fields: ['role'],
+    },
+    {
+        fields: ['userId'],
+    },
+]
 
 @Table({
-	tableName: 'users',
-	timestamps: true,   
+    tableName: 'roles',
+    timestamps: true,
+    indexes: indexes
 })
-export class RoleModel extends BaseModel<RoleCreatinAttributes> {
+export class RoleModel extends Model<RoleCreatinAttributes> {
     @PrimaryKey
     @Column({
         type: DataType.UUID,
@@ -27,10 +37,14 @@ export class RoleModel extends BaseModel<RoleCreatinAttributes> {
 
     @Unique(true)
     @Column({
-		type: DataType.STRING,
-		allowNull: false,
-	})
-	role!: string;
+        type: DataType.STRING,
+        allowNull: false,
+    })
+    role!: string;
+
+    // Add the HasMany association back to UserModel
+    @HasMany(() => UserModel, { foreignKey: 'role', sourceKey: 'id' })
+    users!: UserModel[];
 }
 
 

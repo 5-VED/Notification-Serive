@@ -8,7 +8,7 @@ export interface RenderedTemplate {
 }
 
 // Welcome Template
-const welcome_template = `
+const welcome_template:string = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -186,7 +186,7 @@ const welcome_template = `
 </html>`
 
 // Send OTP Template
-const send_otp_template = `
+const send_otp_template:string = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -340,7 +340,7 @@ export class TemplateService {
 
     // Replace variables in subject and html
     Object.keys(variables).forEach(key => {
-      const placeholder = `{{${key}}}`;
+      const placeholder = `${key}`;
       const value = variables[key] || '';
       
       subject = subject.replace(new RegExp(placeholder, 'g'), value);
