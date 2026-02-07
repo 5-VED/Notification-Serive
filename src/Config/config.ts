@@ -10,18 +10,21 @@ const parsedEnv = dotenvParseVariables(mergedEnv);
 
 const env = process.env.NODE_ENV || 'development';
 
-export const config	= {
+export const config = {
 	env,
 	isDevelopment: env === 'development',
 	isProduction: env === 'production',
 	isTest: env === 'test',
 	port: Number(parsedEnv.PORT) || 3001,
 	database: {
-		host: parsedEnv.DB_HOST,  
+		host: parsedEnv.DB_HOST,
 		port: parsedEnv.DB_PORT,
 		name: parsedEnv.DB_NAME,
 		username: parsedEnv.DB_USER,
 		password: parsedEnv.DB_PASSWORD,
+		mongo: {
+			uri: parsedEnv.MONGODB_URI,
+		},
 	},
 	email: {
 		user: parsedEnv.SMTP_USER,
@@ -31,13 +34,13 @@ export const config	= {
 	},
 	server: {
 		memoryUsageTimeOut: (parsedEnv.MEMORY_USAGE_TIMEOUT),
-		activateNewRelic: true	
+		activateNewRelic: true
 	},
 	jwt: {
 		secret: parsedEnv.JWT_SECRET,
 		expiresIn: parsedEnv.JWT_EXPIRES_IN,
 	},
-	kafka:{
+	kafka: {
 		brokers: parsedEnv.KAFKA_BROKERS || parsedEnv.KAFKA_BROKER || 'localhost:9092',
 	},
 	rabbitmq: {

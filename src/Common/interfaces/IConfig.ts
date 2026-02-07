@@ -10,6 +10,9 @@ export interface IConfig {
         name: string;
         username: string;
         password: string;
+        mongo: {
+            uri: string;
+        };
     };
     email: {
         user: string;

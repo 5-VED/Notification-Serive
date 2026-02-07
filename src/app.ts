@@ -9,6 +9,7 @@ import { freemem } from 'os';
 import { config } from './Config/config';
 import logger from './Config/Logger';
 import { connection } from './Database/PostgresConnection';
+import connectMongoDB from './Database/MongoDB';
 import errorHandler from "./Middlewares/ErrorHandler";
 import { IndexRoute } from './Routers';
 import { IRoutes } from './Common/interfaces/IRoutes';
@@ -40,7 +41,7 @@ export default class App {
     public async initialize(): Promise<void> {
         await this.connect();
         // await redisClient
-        this.initializeRabbitMQ()
+        // this.initializeRabbitMQ()
         this.initializeRoutes(new IndexRoute(this.app));
         this.initializeErrorHandling();
     }
@@ -50,14 +51,15 @@ export default class App {
             const rabbitMQConnection = new RabbitMQConnectin();
             await rabbitMQConnection.connect();
         } catch (error: unknown) {
-            logger.error("❌ RabbitMQ connection failed:", error);            
+            logger.error("❌ RabbitMQ connection failed:", error);
             process.exit(1);
         }
     }
 
     public async connect(): Promise<void> {
         try {
-            await connection();
+            // await connection();
+            await connectMongoDB();
             logger.info('Database connected successfully');
         } catch (error) {
             logger.error('Database connection failed:', error);
