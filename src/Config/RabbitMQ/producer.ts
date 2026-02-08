@@ -21,7 +21,7 @@ class RabbitMQProducer extends RabbitMQConnectin {
 
             if (!channel) {
                 throw new Error("RabbitMQ channel not available");
-            }            
+            }
 
             const mainExchange = 'notifications';
             const dlqExchange = 'notifications.dlq';
@@ -37,7 +37,7 @@ class RabbitMQProducer extends RabbitMQConnectin {
                     channel.assertExchange(dlqExchange, 'topic', { durable: true })
                 ]
             )
-            
+
             // Queues
             await Promise.all(
                 [

@@ -46,15 +46,15 @@ export default class App {
         this.initializeErrorHandling();
     }
 
-    public async initializeRabbitMQ(): Promise<any> {
-        try {
-            const rabbitMQConnection = new RabbitMQConnectin();
-            await rabbitMQConnection.connect();
-        } catch (error: unknown) {
-            logger.error("❌ RabbitMQ connection failed:", error);
-            process.exit(1);
-        }
-    }
+    // public async initializeRabbitMQ(): Promise<any> {
+    //     try {
+    //         const rabbitMQConnection = new RabbitMQConnectin();
+    //         await rabbitMQConnection.connect();
+    //     } catch (error: unknown) {
+    //         logger.error("❌ RabbitMQ connection failed:", error);
+    //         process.exit(1);
+    //     }
+    // }
 
     public async connect(): Promise<void> {
         try {
